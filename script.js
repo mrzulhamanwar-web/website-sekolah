@@ -1,8 +1,7 @@
 // =================================
 // KONFIGURASI & HELPER UTAMA
 // =================================
-const API_BASE_URL = 'https://backend-sekolah-nine.vercel.app/api';
-
+const API_BASE_URL = '/api';
 // Helper Function untuk Fetch Data API
 async function muatDataAPI(endpoint) {
   try {
