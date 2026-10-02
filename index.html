@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMK MULTI KARYA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!--===========================
+     ATAS: NAMA SEKOLAH & NAVIGASI
+     =============================== -->
+    <header class="main-header">
+        <div class="header-content">
+
+            <!-- BLOK LOGO (Ujung Kiri) -->
+            <div class="school-logo" >
+                <!-- 1. Tambahkan tag img untuk logo Anda di sini -->
+                <img src="" alt="Logo Sekolah" class="logo-img" id="logo-sekolah">
+                 <!-- Bungkus teks ke dalam wadah agar teksnya tetap tersusun ke bawah -->
+                <div class="logo-text" >
+                <h1 id="nama-sekolah">SMK MULTI KARYA</h1>
+                <p id="slogan-sekolah">SMK Bisa, Multi Karya Luar Biasa</p>
+                </div>
+            </div>
+
+            <!-- BLOK NAVIGASI (Ujung Kanan) -->
+            <nav class="main-nav"> 
+                <ul id="wadah-menu"></ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- WRAPPER HALAMAN UTAMA -->
+    <div class="container">
+
+
+        <!--=========================
+         KOTAK 1: SLIDER UTAMA 
+         ============================-->
+
+<!-- KOTAK 1: SLIDER UTAMA (FULL SCREEN WIDE BANNER) -->
+<section class="slider-utama" id="beranda">
+    
+    <!-- Wadah untuk menampung barisan foto slider -->
+    <div class="slider-container" id="wadah-slide-utama">
+    </div>       
+       
+       
+   
+
+    <!-- Indikator slide -->
+    <div class="slider-dots" id="wadah-dot-utama">
+       
+    </div>
+</section>
+
+
+
+        <!--===========================
+         KOTAK 2: LOGO JURUSAN 
+         =============================-->
+
+
+<section class="box-section logo-jurusan" id="jurusan">
+    <h2>Kompetensi Keahlian (Jurusan)</h2>
+    <p class="section-subtitle">Pilihan masa depan terbaik untuk karier cemerlangmu</p>
+    
+    <div id="wadah-keahlian"class="jurusan-grid">        
+       
+
+    </div>
+</section>
+
+        
+   <!-- ==================================
+    KOTAK 3: INFORMASI, BERITA, PENGUMUMAN
+    ====================================== -->
+<section class="box-section informasi" id="informasi">
+    <h2>INFO SEKOLAH</h2>
+    <p class="section-subtitle">Update informasi,Berita dan Pengumuman Sekolah</p>
+
+
+<div class="info-berita-pengumuman">
+
+
+    <!-- --------------------------
+         INFORMASI
+   -------------------------------- -->
+    <div class="panel-info" >
+
+        <div class="panel-header">
+            <div class="panel-icon">ℹ️</div>
+
+            <div>
+                <h3>Informasi</h3>
+                <p>Informasi terbaru sekolah</p>
+            </div>
+        </div>
+
+
+        <div class="info-gambar" id="wadah-informasi">
+                   
+            </div>
+
+
+        <a href="#" class="lihat-semua">
+            Lihat Semua Informasi →
+        </a>
+
+    </div>
+
+
+    <!-- ----------------------
+         BERITA
+    --------------------------- -->
+    <div class="panel-berita">
+
+        <div class="panel-header">
+            <div class="panel-icon">📰</div>
+
+            <div>
+                <h3>Berita</h3>
+                <p>Berita terbaru sekolah</p>
+            </div>
+        </div>
+
+
+        <div class="daftar-berita" id="wadah-berita">
+            <p>Memuat berita terbaru...</p>
+        </div>
+
+        
+        <a href="#" class="lihat-semua">
+            Lihat Semua Berita →
+        </a>
+
+    </div>
+
+
+    <!-- --------------------------
+         PENGUMUMAN
+    -------------------------------- -->
+    <div class="panel-pengumuman">
+
+        <div class="panel-header">
+            <div class="panel-icon">📢</div>
+
+            <div>
+                <h3>Pengumuman</h3>
+                <p>Pengumuman penting sekolah</p>
+            </div>
+        </div>
+
+
+        <!-- WADAH DINAMIS: Beri ID 'wadah-pengumuman' -->
+    <div class="daftar-pengumuman" id="wadah-pengumuman">
+        <p>Memuat pengumuman...</p>
+    </div>
+
+    <a href="#" class="lihat-semua">
+        Lihat Semua Pengumuman →
+    </a>
+
+    </div>
+
+
+</div>
+
+</section>
+
+        <!--===========================
+         KOTAK 4: FOTO-FOTO KEGIATAN
+         ------------------------------- -->
+
+
+       <section class="box-section foto-kegiatan" id="galeri">
+
+    <div class="judul-galeri">
+        <h2>Galeri Kegiatan Sekolah</h2>
+        <p>Dokumentasi kegiatan dan aktivitas siswa SMK Multi Karya</p>
+    </div>
+
+    <div class="galeri-grid" id="wadah-galeri">
+        <p>Memuat foto kegiatan...</p>
+    </div>
+
+<!-- Lightbox tetap dipertahankan untuk fitur popup gambar -->      
+
+<div class="lightbox" id="lightbox">
+
+    <button class="tutup-lightbox" id="tutupLightbox">
+        ✕
+    </button>
+
+    <img src="" alt="Foto Kegiatan" id="gambarLightbox">
+
+</div>
+</section>
+
+
+
+        <!-- ================================
+         KOTAK 5: SLIDE FOTO KEGIATAN JURUSAN 
+         --------------------------------------->
+
+
+       <section class="box-section slide-jurusan">
+
+    <div class="judul-jurusan">
+        <h2>Kegiatan Khusus Per Jurusan</h2>
+        <p>Dokumentasi kegiatan siswa dari berbagai kompetensi keahlian</p>
+    </div>
+
+    <div class="jurusan-slider">
+
+        <button class="tombol-jurusan tombol-sebelumnya" id="tombolSebelumnya">
+            ❮
+        </button>
+
+<!-- WADAH DINAMIS: Beri ID 'wadah-slider-jurusan' dan kosongkan isinya -->
+        <div class="slide-jurusan-container" id="wadah-slider-jurusan">
+            <p style="text-align: center; color: #fff;">Memuat slide jurusan...</p>
+        </div>
+        
+        <button class="tombol-jurusan tombol-selanjutnya" id="tombolSelanjutnya">
+            ❯
+        </button>
+
+    </div>
+
+
+</section>
+
+
+  <!--=======================
+         NEW :EKSKUL
+   --------------------------->
+
+
+<section class="box-section ekskul" id="ekskul">
+    <div class="judul-ekskul">
+    <h2>Ekstrakurikuler Sekolah</h2>
+    </div>
+    
+    <!-- WADAH UTAMA UNTUK DITEMPEL DATA DARI JAVASCRIPT -->
+    <div id="wadah-eskul" class="container-eskul">
+        <!-- Kartu eskul akan muncul secara dinamis di sini -->
+    </div>
+</section>
+
+
+        <!--=======================
+         KOTAK 6: GOOGLE MAPS 
+         --------------------------->
+
+<section class="box-section lokasi-sekolah" id="kontak">
+
+    <div class="judul-lokasi">
+        <h2>Lokasi Sekolah</h2>
+        <p>Temukan lokasi SMK Multi Karya</p>
+    </div>
+
+    <div class="lokasi-container">
+         <!-- GOOGLE MAPS -->
+        <div class="peta-sekolah">
+<iframe
+    id="kontak-iframe"
+    src="https://www.google.com/maps?q=Jl.+STM+No.+10+Medan&output=embed"
+    width="100%"
+    height="100%"
+    style="border:0;"
+    allowfullscreen=""
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+        </div>
+
+
+        <!-- INFORMASI SEKOLAH -->
+        <div class="info-lokasi">
+
+            <div class="item-lokasi">
+                <div class="ikon-lokasi">📍</div>
+                <div>
+                    <h3>Alamat</h3>
+                    <p id="kontak-alamat">Jl. STM No. 10 Medan</p>
+                </div>
+            </div>
+
+            <div class="item-lokasi">
+                <div class="ikon-lokasi">🕐</div>
+                <div>
+                    <h3>Jam Sekolah</h3>
+                    <p id="kontak-jam">Senin - Jumat<br>07.00 - 15.20 WIB</p>
+                </div>
+            </div>
+
+            <div class="item-lokasi">
+                <div class="ikon-lokasi">📞</div>
+                <div>
+                    <h3>Call Centre</h3>
+                    <p id="kontak-telepon">0822-777-88-773</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+        <!-- ==============================
+         KOTAK 7: MEDIA SOSIAL & YOUTUBE 
+         =================================-->
+
+
+     <section class="box-section sosial-sekolah" id="sosmed">
+
+    <div class="judul-sosial">
+        <h2>Ikuti Kami</h2>
+        <p>
+            Dapatkan informasi terbaru tentang kegiatan dan prestasi
+            SMK Multi Karya
+        </p>
+    </div>
+
+
+    <!-- SOSIAL MEDIA -->
+     <!-- WADAH SOSIAL MEDIA (TAMBAHKAN ID ID="WADAH-SOSMED") -->
+
+    <div id="wadah-sosmed" class="sosial-container">    
+        <!-- Data sosial media akan dimasukkan secara dinamis oleh JavaScript -->   
+    </div>
+
+
+    <!-- VIDEO YOUTUBE -->
+
+    <div class="youtube-sekolah">
+
+        <div class="judul-youtube">
+            <h3>Video Kegiatan Sekolah</h3>
+            <p>
+                Saksikan berbagai kegiatan dan dokumentasi
+                SMK Multi Karya
+            </p>
+        </div>
+
+        <div class="youtube-video">
+
+            <iframe
+                id="iframe-youtube"
+                src="https://www.youtube.com/embed/Cn9V7UcFsLs"
+                title="Video Kegiatan SMK Multi Karya"
+                allowfullscreen>
+            </iframe>
+
+        </div>
+
+    </div>
+
+</section>
+
+    </div>
+
+    <!--===================================
+     KOTAK 8 / FOOTER: BAGIAN PALING BAWAH 
+     ====================================-->
+
+
+     
+   <footer class="footer-sekolah">
+
+    <div class="footer-container">
+
+        <!-- IDENTITAS SEKOLAH -->
+
+        <div class="footer-kolom footer-identitas">
+
+            <img src="" alt="Logo SMK Multi Karya" class="logo-img" id="logo-footer">
+
+            <h2 id="sekolah-footer">SMK MULTI KARYA</h2>
+
+            <p id="slogan-footer">
+                Membangun generasi terampil, kreatif,
+                dan siap menghadapi dunia kerja.
+            </p>
+
+        </div>
+
+
+        <!-- MENU -->
+
+        <div class="footer-kolom">
+
+            <h3>Menu Cepat</h3>
+            <div id="wadah-menu-footer"></div>
+           
+        </div>
+            
+
+    </div>
+
+
+    <!-- COPYRIGHT -->
+
+    <div class="footer-bawah">
+
+        <p id="copyright">
+            © 2026 SMK Multi Karya. All Rights Reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+        <script src="script.js"></script>
+
+</body>
+</html>

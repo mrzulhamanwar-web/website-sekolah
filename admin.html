@@ -1,0 +1,1055 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Panel - CMS Sekolah</title>
+    <link rel="stylesheet" href="styleadmin.css" />
+    <script>
+      (async function proteksiRole() {
+        try {
+          // Tambahkan { credentials: 'include' } agar cookie session terkirim ke server
+          const response = await fetch('/api/me', {
+            credentials: 'include',
+          });
+          const result = await response.json();
+
+          if (!response.ok || result.status !== 'success') {
+            alert('Akses ditolak. Silakan login terlebih dahulu!');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          window.currentUser = result;
+
+          document.addEventListener('DOMContentLoaded', () => {
+            const namaUserEl = document.getElementById('nama-user-login');
+            const roleUserEl = document.getElementById('role-user-login');
+
+            if (namaUserEl) namaUserEl.textContent = result.username;
+            if (roleUserEl)
+              roleUserEl.textContent =
+                result.role === 'admin' ? 'Administrator' : 'Operator Konten';
+
+            // Sembunyikan menu khusus Admin jika role adalah operator
+            if (result.role !== 'admin') {
+              document.querySelectorAll('.khusus-admin').forEach((el) => {
+                el.style.display = 'none';
+              });
+            }
+          });
+        } catch (err) {
+          console.error('Gagal verifikasi session:', err);
+          window.location.href = 'login.html';
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="sidebar">
+      <div class="sidebar-header">CMS Panel Sekolah</div>
+      <div class="user-info-badge">
+        Pengguna: <strong id="nama-user-login">-</strong><br />
+        Peran: <span id="role-user-login" style="color: #60a5fa">-</span>
+      </div>
+      <ul class="sidebar-menu">
+        <li>
+          <a onclick="switchSection('dashboard', this)" class="active"
+            >📊 Dashboard Utama</a
+          >
+        </li>
+
+        <!-- MODUL KHUSUS ADMIN UTAMA -->
+        <li class="khusus-admin">
+          <a onclick="switchSection('pengaturan', this)"
+            >⚙️ Identitas Sekolah</a
+          >
+        </li>
+        <li class="khusus-admin" data-role="admin">
+          <a onclick="switchSection('navigasi', this)">🧭 Kelola Navigasi</a>
+        </li>
+
+        <!-- MODUL OPERATOR & ADMIN -->
+        <li>
+          <a onclick="switchSection('keahlian', this)">🎓 Kelola Keahlian</a>
+        </li>
+        <li><a onclick="switchSection('slider', this)">🖼️ Kelola Slider</a></li>
+        <li>
+          <a onclick="switchSection('informasi', this)">💡 Kelola Informasi</a>
+        </li>
+        <li>
+          <a onclick="switchSection('pengumuman', this)"
+            >📢 Kelola Pengumuman</a
+          >
+        </li>
+        <li><a onclick="switchSection('berita', this)">📰 Kelola Berita</a></li>
+        <li>
+          <a onclick="switchSection('galeri', this)"
+            >📸 Kelola Galeri Kegiatan</a
+          >
+        </li>
+        <li>
+          <a onclick="switchSection('slider-jurusan', this)"
+            >🎞️ Kelola Slide Jurusan</a
+          >
+        </li>
+        <li>
+          <a onclick="switchSection('ekskul', this)"
+            >🏅 Kelola Ekstrakurikuler</a
+          >
+        </li>
+        <li>
+          <a onclick="switchSection('kontak', this)"
+            >📞 Kelola Kontak Sekolah</a
+          >
+        </li>
+        <li>
+          <a onclick="switchSection('medsos', this)">💬 Kelola Sosial Media</a>
+        </li>
+        <li>
+          <a onclick="switchSection('video', this)">🎥 Kelola Video Sekolah</a>
+        </li>
+        <li>
+          <a onclick="switchSection('footer', this)"
+            >📑 Kelola Footer Website</a
+          >
+        </li>
+        <li data-role="admin">
+          <a onclick="switchSection('pengaturan-akun', this)"
+            >🔑 Pengaturan Akun</a
+          >
+        </li>
+        <li>
+          <a onclick="keluarAdmin()" style="color: #ef4444; cursor: pointer"
+            >🚪 Logout</a
+          >
+        </li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <section id="dashboard" class="content-section active">
+        <h2>Dashboard Utama</h2>
+        <p>
+          Selamat datang di Panel CMS Sekolah. Pilih menu di sebelah kiri untuk
+          mengelola konten website.
+        </p>
+      </section>
+
+      <!-- SEKSI KHUSUS ADMIN -->
+      <section id="pengaturan" class="content-section khusus-admin">
+        <h2>Pengaturan Identitas Sekolah</h2>
+        <form
+          id="form-pengaturan"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <div class="form-group">
+            <label>Nama Sekolah:</label
+            ><input type="text" id="nama_sekolah" required />
+          </div>
+          <div class="form-group">
+            <label>Slogan:</label><input type="text" id="slogan" />
+          </div>
+          <div class="form-group">
+            <label>Logo Saat Ini:</label><br /><img
+              id="preview-logo"
+              width="100"
+              style="margin-bottom: 10px; border-radius: 4px"
+            />
+          </div>
+          <div class="form-group">
+            <label>Ganti Logo Baru:</label
+            ><input type="file" id="logo" accept="image/*" />
+          </div>
+          <button type="submit">Simpan Pengaturan</button>
+        </form>
+        <p id="pesan-identitas" class="pesan-status"></p>
+      </section>
+
+      <section
+        id="navigasi"
+        class="content-section khusus-admin"
+        data-role="admin"
+      >
+        <h2>Kelola Menu Navigasi</h2>
+        <form
+          id="form-navigasi"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+        >
+          <h3>Tambah / Edit Menu</h3>
+          <input type="hidden" id="id-menu" />
+          <div class="form-group">
+            <label>Nama Menu:</label
+            ><input
+              type="text"
+              id="nama_menu"
+              required
+              placeholder="Contoh: Profil"
+            />
+          </div>
+          <div class="form-group">
+            <label>Link / URL:</label
+            ><input
+              type="text"
+              id="url_nav"
+              required
+              placeholder="Contoh: #profil"
+            />
+          </div>
+          <div class="form-group">
+            <label>Urutan:</label
+            ><input type="number" id="urutan_nav" value="1" required />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan">Simpan Menu</button>
+            <button
+              type="button"
+              id="btn-batal-navigasi"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-navigasi" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Menu</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Urutan</th>
+              <th>Nama Menu</th>
+              <th>URL</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-menu-body"></tbody>
+        </table>
+      </section>
+
+      <!-- SEKSI BERSAMA (OPERATOR & ADMIN) -->
+      <section id="slider" class="content-section">
+        <h2>Kelola Slider Website</h2>
+        <form
+          id="form-slider"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Slider</h3>
+          <input type="hidden" id="id-slider" />
+          <div class="form-group">
+            <label>Judul Slider:</label
+            ><input type="text" id="judul" required />
+          </div>
+          <div class="form-group">
+            <label>Deskripsi:</label
+            ><textarea id="deskripsi" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Gambar Slider:</label
+            ><input type="file" id="gambar" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-slider">Simpan Slider</button>
+            <button
+              type="button"
+              id="btn-batal-slider"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-slider" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Slider</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Gambar</th>
+              <th>Judul</th>
+              <th>Deskripsi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-slider-body"></tbody>
+        </table>
+      </section>
+
+      <section id="informasi" class="content-section">
+        <h2>Kelola Informasi Sekolah</h2>
+        <form
+          id="form-informasi"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Informasi</h3>
+          <input type="hidden" id="id-informasi" />
+          <div class="form-group">
+            <label>Judul:</label
+            ><input type="text" id="judul_informasi" required />
+          </div>
+          <div class="form-group">
+            <label>Link Informasi:</label
+            ><input type="text" id="link_informasi" required />
+          </div>
+          <div class="form-group">
+            <label>Gambar:</label
+            ><input type="file" id="gambar_informasi" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-informasi">
+              Simpan Informasi
+            </button>
+            <button
+              type="button"
+              id="btn-batal-informasi"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-informasi" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Informasi</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Gambar</th>
+              <th>Link</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-informasi-body"></tbody>
+        </table>
+      </section>
+
+      <section id="pengumuman" class="content-section">
+        <h2>Kelola Pengumuman Sekolah</h2>
+        <form
+          id="form-pengumuman"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Pengumuman</h3>
+          <input type="hidden" id="id-pengumuman" />
+          <div class="form-group">
+            <label>Judul:</label
+            ><input type="text" id="judul_pengumuman" required />
+          </div>
+          <div class="form-group">
+            <label>Tanggal Update:</label
+            ><input type="date" id="tanggal" required />
+          </div>
+          <div class="form-group">
+            <label>Isi:</label><input type="text" id="isi" required />
+          </div>
+          <div class="form-group">
+            <label>Gambar:</label
+            ><input type="file" id="gambar_pengumuman" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-pengumuman">
+              Simpan Pengumuman
+            </button>
+            <button
+              type="button"
+              id="btn-batal-pengumuman"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-pengumuman" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Pengumuman</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Tanggal</th>
+              <th>Isi</th>
+              <th>Gambar</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-pengumuman-body"></tbody>
+        </table>
+      </section>
+
+      <section id="berita" class="content-section">
+        <h2>Kelola Berita Sekolah</h2>
+        <form
+          id="form-berita"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Berita</h3>
+          <input type="hidden" id="id-berita" />
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Judul Berita:</label
+              ><input type="text" id="judul_berita" required />
+            </div>
+            <div class="form-group">
+              <label>Tanggal:</label
+              ><input type="date" id="tanggal_berita" required />
+            </div>
+            <div class="form-group full-width">
+              <label>Gambar:</label
+              ><input type="file" id="gambar_berita" accept="image/*" />
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-berita">Simpan Berita</button>
+            <button
+              type="button"
+              id="btn-batal-berita"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+        </form>
+        <h3>Daftar Berita</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Tanggal</th>
+              <th>Gambar</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-berita-body"></tbody>
+        </table>
+        <p id="pesan-berita" class="pesan-status"></p>
+        <div class="user-profile">
+          <span id="username-display">Admin</span>
+          <span class="badge bg-primary" id="user-role-display">Role</span>
+        </div>
+      </section>
+
+      <section id="keahlian" class="content-section">
+        <h2>Kelola Kompetensi Keahlian</h2>
+        <form
+          id="form-keahlian"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Keahlian</h3>
+          <input type="hidden" id="id-keahlian" />
+          <div class="form-group">
+            <label>Kode Keahlian:</label
+            ><input type="text" id="kode_keahlian" required />
+          </div>
+          <div class="form-group">
+            <label>Nama Keahlian:</label
+            ><input type="text" id="nama_keahlian" required />
+          </div>
+          <div class="form-group">
+            <label>Ringkasan:</label
+            ><textarea id="ringkasan" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Link Detail:</label
+            ><input type="text" id="link_detail" value="#" />
+          </div>
+          <div class="form-group">
+            <label>Urutan:</label><input type="number" id="urutan" value="0" />
+          </div>
+          <div class="form-group">
+            <label>Logo Keahlian:</label
+            ><input type="file" id="logo_keahlian" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-keahlian">
+              Simpan Keahlian
+            </button>
+            <button
+              type="button"
+              id="btn-batal-keahlian"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-keahlian" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Keahlian</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Urutan</th>
+              <th>Logo</th>
+              <th>Keahlian</th>
+              <th>Ringkasan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-keahlian-body"></tbody>
+        </table>
+      </section>
+
+      <section id="galeri" class="content-section">
+        <h2>Kelola Galeri Kegiatan Sekolah</h2>
+        <form
+          id="form-galeri"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Galeri</h3>
+          <input type="hidden" id="id-galeri" />
+          <div class="form-group">
+            <label>Judul:</label
+            ><input type="text" id="judul_galeri" required />
+          </div>
+          <div class="form-group">
+            <label>Kategori Galeri:</label
+            ><input type="text" id="kategori_galeri" required />
+          </div>
+          <div class="form-group">
+            <label>Gambar:</label
+            ><input type="file" id="gambar_galeri" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-galeri">Simpan Galeri</button>
+            <button
+              type="button"
+              id="btn-batal-galeri"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-galeri" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Galeri</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul</th>
+              <th>Gambar</th>
+              <th>Kategori</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-galeri-body"></tbody>
+        </table>
+      </section>
+
+      <section id="slider-jurusan" class="content-section">
+        <h2>Kelola Slider Jurusan</h2>
+        <form
+          id="form-jurusan"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Slider</h3>
+          <input type="hidden" id="id-jurusan" />
+          <div class="form-group">
+            <label>Judul Slider:</label
+            ><input type="text" id="nama_jurusan" required />
+          </div>
+          <div class="form-group">
+            <label>Singkatan:</label
+            ><input type="text" id="singkatan_jurusan" />
+          </div>
+          <div class="form-group">
+            <label>Deskripsi:</label
+            ><textarea id="deskripsi_jurusan" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Gambar Slider:</label
+            ><input type="file" id="gambar_jurusan" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-jurusan">Simpan Slider</button>
+            <button
+              type="button"
+              id="btn-batal-jurusan"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-jurusan" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Slider</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Gambar</th>
+              <th>Judul</th>
+              <th>Singkatan</th>
+              <th>Deskripsi</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-jurusan-body"></tbody>
+        </table>
+      </section>
+
+      <section id="ekskul" class="content-section">
+        <h2>Kelola Ekstrakurikuler</h2>
+        <form
+          id="form-ekskul"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+          enctype="multipart/form-data"
+        >
+          <h3>Tambah / Edit Ekstrakurikuler</h3>
+          <input type="hidden" id="id-ekskul" />
+          <div class="form-group">
+            <label>Nama Ekstrakurikuler:</label
+            ><input type="text" id="nama_ekskul" required />
+          </div>
+          <div class="form-group">
+            <label>Pembimbing:</label
+            ><textarea id="pembimbing" rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Gambar Ekstrakurikuler:</label
+            ><input type="file" id="gambar_ekskul" accept="image/*" />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-ekskul">
+              Simpan Ekstrakurikuler
+            </button>
+            <button
+              type="button"
+              id="btn-batal-ekskul"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-ekskul" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Ekstrakurikuler</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Gambar</th>
+              <th>Nama Ekskul</th>
+              <th>Pembimbing</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-ekskul-body"></tbody>
+        </table>
+      </section>
+
+      <section id="kontak" class="content-section">
+        <h2>Kelola Menu Kontak</h2>
+        <form
+          id="form-kontak"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+        >
+          <h3>Tambah / Edit Kontak</h3>
+          <input type="hidden" id="id-kontak" />
+          <div class="form-group">
+            <label>Alamat Sekolah:</label
+            ><input type="text" id="alamat_sekolah" required />
+          </div>
+          <div class="form-group">
+            <label>Jam Sekolah:</label
+            ><input type="text" id="jam_sekolah" required />
+          </div>
+          <div class="form-group">
+            <label>Telepon Sekolah:</label
+            ><input type="text" id="telepon_sekolah" required />
+          </div>
+          <div class="form-group">
+            <label>Peta Sekolah:</label
+            ><input type="text" id="peta_sekolah" required />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-kontak">Simpan Kontak</button>
+            <button
+              type="button"
+              id="btn-batal-kontak"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-kontak" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Kontak</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Alamat</th>
+              <th>Jam</th>
+              <th>Telepon</th>
+              <th>Peta</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-kontak-body"></tbody>
+        </table>
+      </section>
+
+      <section id="medsos" class="content-section">
+        <h2>Kelola Media Sosial</h2>
+        <form
+          id="form-medsos"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+        >
+          <h3>Tambah / Edit Sosmed</h3>
+          <input type="hidden" id="id-medsos" />
+          <div class="form-group">
+            <label>Nama Sosmed:</label
+            ><input type="text" id="nama_sosmed" required />
+          </div>
+          <div class="form-group">
+            <label>URL Sosmed:</label
+            ><input type="text" id="url_sosmed" required />
+          </div>
+          <div class="form-group">
+            <label>Keterangan:</label
+            ><input type="text" id="ket_sosmed" required />
+          </div>
+          <div class="form-group">
+            <label>Ikon Sosmed:</label
+            ><input type="text" id="ikon_sosmed" required />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-sosmed">Simpan Sosmed</button>
+            <button
+              type="button"
+              id="btn-batal-sosmed"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-sosmed" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Sosmed</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Nama</th>
+              <th>URL</th>
+              <th>Keterangan</th>
+              <th>Ikon</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-medsos-body"></tbody>
+        </table>
+      </section>
+
+      <section id="video" class="content-section">
+        <h2>Kelola Video Sekolah</h2>
+        <form
+          id="form-video"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+        >
+          <h3>Tambah / Edit Video</h3>
+          <input type="hidden" id="id-video" />
+          <div class="form-group">
+            <label>Judul Video:</label
+            ><input type="text" id="judul_video" required />
+          </div>
+          <div class="form-group">
+            <label>URL Embed:</label
+            ><input type="text" id="url_embed" required />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-video">Simpan Video</button>
+            <button
+              type="button"
+              id="btn-batal-video"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-video" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Video</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Judul Video</th>
+              <th>URL Embed</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-video-body"></tbody>
+        </table>
+      </section>
+
+      <section id="footer" class="content-section">
+        <h2>Kelola Footer Website</h2>
+        <form
+          id="form-footer"
+          style="background: #f9f9f9; padding: 15px; border-radius: 5px"
+        >
+          <h3>Edit Footer</h3>
+          <input type="hidden" id="id-footer" />
+          <div class="form-group">
+            <label>Logo Footer:</label>
+            <input type="file" id="logo_footer" accept="image/*" />
+            <div style="margin-top: 10px">
+              <p style="font-size: 12px; color: gray; margin-bottom: 5px">
+                Pratinjau Logo Saat Ini:
+              </p>
+              <img
+                id="preview-logo-footer"
+                src=""
+                width="100"
+                style="
+                  border: 1px solid #ccc;
+                  border-radius: 4px;
+                  display: none;
+                  object-fit: cover;
+                "
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Nama Sekolah:</label
+            ><input type="text" id="sekolah_footer" required />
+          </div>
+          <div class="form-group">
+            <label>Slogan Sekolah:</label
+            ><input type="text" id="slogan_footer" required />
+          </div>
+          <div class="form-group">
+            <label>Copyright:</label
+            ><input type="text" id="copyright" required />
+          </div>
+          <div style="display: flex; gap: 10px">
+            <button type="submit" id="btn-simpan-footer">Simpan Footer</button>
+            <button
+              type="button"
+              id="btn-batal-footer"
+              style="background: #6c757d; display: none"
+            >
+              Batal
+            </button>
+          </div>
+          <p id="pesan-footer" class="pesan-status"></p>
+        </form>
+        <h3>Daftar Footer</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Logo</th>
+              <th>Nama Sekolah</th>
+              <th>Slogan</th>
+              <th>Copyright</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="tabel-footer-body"></tbody>
+        </table>
+      </section>
+
+      <section
+        id="pengaturan-akun"
+        class="content-section pengaturan-page"
+        data-role="admin"
+      >
+        <h2>Pengaturan Akun</h2>
+        <div class="buat-akun-baru kartu-pengaturan">
+          <h2>Tambah Akun Baru</h2>
+
+          <form id="form-tambah-user">
+            <div>
+              <label for="username-user">Username</label>
+              <input
+                type="text"
+                id="username-user"
+                placeholder="Masukkan username"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="password-user">Password</label>
+              <input
+                type="password"
+                id="password-user"
+                placeholder="Masukkan password"
+                required
+              />
+            </div>
+            <div>
+              <label for="password-user-confirm">Konfirmasi Password</label>
+              <input
+                type="password"
+                id="password-user-confirm"
+                placeholder="Ulangi password"
+                required
+              />
+            </div>
+
+            <div>
+              <label for="role-user">Role</label>
+              <select id="role-user" required>
+                <option value="operator">Operator</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <button type="submit">Tambah Akun</button>
+          </form>
+        </div>
+
+        <div class="pengaturan-akun kartu-daftar-user">
+          <h2>Daftar Akun</h2>
+          <div id="daftarUsers"></div>
+        </div>
+        <div id="modal-edit-user" class="modal-edit-user">
+          <div class="modal-edit-user-content">
+            <button
+              type="button"
+              class="tutup-modal-user"
+              onclick="tutupEditUser()"
+            >
+              &times;
+            </button>
+
+            <h2>Edit Akun</h2>
+
+            <input type="hidden" id="edit-user-id" />
+
+            <div>
+              <label for="edit-username"> Username </label>
+
+              <input type="text" id="edit-username" />
+            </div>
+
+            <div>
+              <label for="edit-role"> Role </label>
+
+              <select id="edit-role">
+                <option value="operator">Operator</option>
+
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+
+            <hr />
+
+            <h3>Ubah Password</h3>
+
+            <div>
+              <label for="edit-password"> Password Baru </label>
+
+              <input
+                type="password"
+                id="edit-password"
+                placeholder="Kosongkan jika tidak diubah"
+              />
+            </div>
+
+            <div>
+              <label for="edit-password-confirm"> Konfirmasi Password </label>
+
+              <input
+                type="password"
+                id="edit-password-confirm"
+                placeholder="Ulangi password baru"
+              />
+            </div>
+
+            <div class="aksi-edit-user">
+              <button type="button" onclick="simpanEditUser()">
+                Simpan Perubahan
+              </button>
+
+              <button type="button" onclick="hapusUserDariEdit()">
+                Hapus Akun
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div id="notifikasi-admin" class="notifikasi-admin">
+        <span id="notifikasi-icon"></span>
+        <span id="notifikasi-pesan"></span>
+      </div>
+    </div>
+
+    <script>
+      function switchSection(sectionId, element) {
+        // Cegah operator mengakses section admin via fungsi manual
+        if (window.currentUser && window.currentUser.role !== 'admin') {
+          const sectionTujuan = document.getElementById(sectionId);
+
+          if (sectionTujuan?.dataset.role === 'admin') {
+            tampilkanNotifikasi(
+              'Akses ditolak: Menu ini khusus untuk Administrator.',
+              'error'
+            );
+            return;
+          }
+        }
+
+        document
+          .querySelectorAll('.content-section')
+          .forEach((sec) => sec.classList.remove('active'));
+        document
+          .querySelectorAll('.sidebar-menu a')
+          .forEach((menu) => menu.classList.remove('active'));
+
+        document.getElementById(sectionId).classList.add('active');
+        element.classList.add('active');
+
+        if (sectionId === 'navigasi' && typeof muatMenu === 'function')
+          muatMenu();
+        if (sectionId === 'slider' && typeof muatDataSlider === 'function')
+          muatDataSlider();
+        if (sectionId === 'informasi' && typeof muatInformasi === 'function')
+          muatInformasi();
+        if (sectionId === 'galeri' && typeof muatGaleri === 'function')
+          muatGaleri();
+        if (
+          sectionId === 'slider-jurusan' &&
+          typeof muatSliderJurusan === 'function'
+        )
+          muatSliderJurusan();
+        if (sectionId === 'pengumuman' && typeof muatPengumuman === 'function')
+          muatPengumuman();
+        if (sectionId === 'berita' && typeof muatBerita === 'function')
+          muatBerita();
+        if (sectionId === 'keahlian' && typeof muatKeahlian === 'function')
+          muatKeahlian();
+        if (sectionId === 'pengaturan' && typeof muatIdentitas === 'function')
+          muatIdentitas();
+        if (sectionId === 'ekskul' && typeof muatEkstrakurikuler === 'function')
+          muatEkstrakurikuler();
+        if (sectionId === 'kontak' && typeof muatKontakSekolah === 'function')
+          muatKontakSekolah();
+        if (sectionId === 'medsos' && typeof muatSosialMedia === 'function')
+          muatSosialMedia();
+        if (sectionId === 'video' && typeof muatVideoYoutube === 'function')
+          muatVideoYoutube();
+        if (sectionId === 'footer' && typeof muatFooter === 'function')
+          muatFooter();
+      }
+    </script>
+
+    <script src="admin-navigasi.js"></script>
+    <script src="admin-slider.js"></script>
+    <script src="admin-pengumuman.js"></script>
+    <script src="admin-berita.js"></script>
+    <script src="admin-keahlian.js"></script>
+    <script src="admin-identitas.js"></script>
+    <script src="admin-informasi.js"></script>
+    <script src="admin-galeri.js"></script>
+    <script src="admin-jurusan.js"></script>
+    <script src="admin-ekstrakurikuler.js"></script>
+    <script src="admin-kontak.js"></script>
+    <script src="admin-medsos.js"></script>
+    <script src="admin-video.js"></script>
+    <script src="admin-footer.js"></script>
+    <script src="setting.js"></script>
+    <script src="authcheck.js"></script>
+  </body>
+</html>

@@ -1,0 +1,128 @@
+/* Reset & Style Dasar */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #333;
+}
+
+/* Container Form Login */
+.login-container {
+  background: #ffffff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+/* Header Login */
+.login-header h2 {
+  font-size: 44px;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.login-header p {
+  font-size: 18px;
+  color: #64748b;
+  margin-bottom: 25px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 10px;
+  text-align: left;
+  justify-items: center;
+}
+
+.form-group label {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 50%;
+  margin-left: 25%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* Pesan Error */
+#pesan-error {
+  background-color: #fef2f2;
+  color: #ef4444;
+  border: 1px solid #fca5a5;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 20px;
+  display: none;
+}
+
+/* Tombol Submit */
+.btn-login {
+  width: 17%;
+  margin-top: 10px;
+  padding: 5px 10px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 26px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-login:hover {
+  background-color: #1d4ed8;
+}
+
+.btn-login:active {
+  transform: scale(0.98);
+}
+/* Style Tambahan untuk Logo Sekolah */
+.login-logo {
+  width: 80px; /* Ukuran lebar logo (sesuaikan jika perlu) */
+  height: auto; /* Menjaga rasio gambar tetap proporsional */
+  margin-bottom: 12px; /* Jarak antara logo dan judul */
+  display: block;
+  margin-left: auto;
+  margin-right: auto; /* Membuat logo berada tepat di tengah */
+  object-fit: contain;
+}
+
+#form-login h2 {
+  font-size: 30px;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+#label {
+  font-size: 30px;
+}

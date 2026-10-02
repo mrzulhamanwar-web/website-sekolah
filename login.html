@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login Admin</title>
+    <link rel="stylesheet" href="login.css" />
+    <!-- Ganti sesuai nama file CSS Anda -->
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-header">
+        <!-- TAMBAHKAN TAG LOGO DI SINI -->
+        <img
+          id="logo-sekolah"
+          src="uploads/logo.webp"
+          alt="Logo Sekolah"
+          class="login-logo"
+        />
+        <h2>CMS SMK MULTI KARYA</h2>
+        <p>Silakan masuk ke akun administrator</p>
+      </div>
+      <!-- Tag form wajib memiliki id="form-login" -->
+      <form id="form-login">
+        <h2>Login Sistem</h2>
+
+        <!-- Div/Paragraph untuk pesan error jika login gagal -->
+        <p id="pesan-error" style="color: red; display: none"></p>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <!-- Input username wajib id="username" -->
+          <input
+            type="text"
+            id="username"
+            placeholder="Masukkan username"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <!-- Input password wajib id="password" -->
+          <input
+            type="password"
+            id="password"
+            placeholder="Masukkan password"
+            required
+          />
+        </div>
+
+        <button class="btn-login" type="submit">Login</button>
+      </form>
+    </div>
+
+    <!-- Script JavaScript ditempatkan paling bawah sebelum </body> -->
+    <script src="login.js"></script>
+  </body>
+</html>
