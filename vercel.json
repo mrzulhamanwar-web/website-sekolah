@@ -3,6 +3,10 @@
     {
       "source": "/api/:path*",
       "destination": "https://backend-sekolah-nine.vercel.app/api/:path*"
+    },
+    {
+      "source": "/uploads/:path*",
+      "destination": "https://backend-sekolah-nine.vercel.app/uploads/:path*"
     }
   ]
 }
